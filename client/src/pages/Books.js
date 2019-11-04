@@ -57,28 +57,20 @@ class Books extends Component {
     return (
       <Container fluid>
         <Row>
-          <Col size="md-6">
+          <Col size="md-12 sm-12">
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+            <h1>(React) Google Book Search</h1>
+              <h2>Search for and save Books of Interest</h2>
             </Jumbotron>
+          </Col>
+
+          <Col size="md-12 sm-12">
             <form>
               <Input
                 value={this.state.title}
                 onChange={this.handleInputChange}
                 name="title"
                 placeholder="Title (required)"
-              />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
               />
               <FormBtn
                 disabled={!(this.state.author && this.state.title)}
@@ -88,10 +80,8 @@ class Books extends Component {
               </FormBtn>
             </form>
           </Col>
-          <Col size="md-6 sm-12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
+          <Col size="md-12 sm-12">
+          <h2>Results</h2>
             {this.state.books.length ? (
               <List>
                 {this.state.books.map(book => (
@@ -109,6 +99,7 @@ class Books extends Component {
               <h3>No Results to Display</h3>
             )}
           </Col>
+          
         </Row>
       </Container>
     );

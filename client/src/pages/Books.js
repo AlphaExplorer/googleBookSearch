@@ -1,40 +1,36 @@
 import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
-import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
+import API from "../utils/API";
+import { Link } from "react-router-dom";
+import { stat } from "fs";
+
 
 class Books extends Component {
   state = {
-    books: [],
-    title: "",
-    author: "",
-    synopsis: ""
+    search:"",
+    results:[],
   };
 
   componentDidMount() {
-    this.loadBooks();
+    this.searchBooks();
   }
 
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-      )
-      .catch(err => console.log(err));
-  };
+  searchBooks = query => {
+    API.search(query)
+      .then(res => {
 
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
+        this.setState({ results: res.data.items })}, console.log(this.state.results))
       .catch(err => console.log(err));
   };
+  
 
   handleInputChange = event => {
-    const { name, value } = event.target;
+    const name = event.target.name;
+    const value = event.target.value;
     this.setState({
       [name]: value
     });
@@ -42,15 +38,7 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
+    this.searchBooks(this.state.search);
   };
 
   render() {
@@ -67,38 +55,40 @@ class Books extends Component {
           <Col size="md-12 sm-12">
             <form>
               <Input
-                value={this.state.title}
+                value={this.state.search}
                 onChange={this.handleInputChange}
-                name="title"
+                name="search"
                 placeholder="Title (required)"
               />
               <FormBtn
-                disabled={!(this.state.author && this.state.title)}
+                disabled={!(this.state.search)}
                 onClick={this.handleFormSubmit}
               >
-                Submit Book
+                Search Book
               </FormBtn>
             </form>
           </Col>
+           
           <Col size="md-12 sm-12">
           <h2>Results</h2>
-            {this.state.books.length ? (
+            {this.state.results.length ? (
               <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
-                  </ListItem>
-                ))}
+                {this.state.results.filter(book=>book.title!="Undefined").map(book => {
+debugger
+return <ListItem key={book.id}>
+<Link to={"/books/" + book.id}>
+  <strong>
+    {book.volumeInfo.title} by {book.volumeInfo.authors&&book.volumeInfo.authors.join(', ')}
+  </strong>
+</Link>
+
+</ListItem>
+                })}
               </List>
             ) : (
               <h3>No Results to Display</h3>
             )}
-          </Col>
+          </Col> 
           
         </Row>
       </Container>

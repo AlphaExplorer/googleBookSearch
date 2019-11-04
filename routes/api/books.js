@@ -13,4 +13,15 @@ router
   .put(booksController.update)
   .delete(booksController.remove);
 
+router
+  .route("/saved")
+  .get(booksController.findAll)
+  .post(booksController.create);
+
+router
+  .route("/saved:id")
+  .get(booksController.findById)
+  .put(booksController.update)
+  .delete(booksController.remove);
+
 module.exports = router;

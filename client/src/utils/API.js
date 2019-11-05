@@ -1,6 +1,5 @@
 import axios from "axios";
 const BASEURL = "https://www.googleapis.com/books/v1/volumes?q=";
-const APIKEY = "";
 
 
 export default {
@@ -21,6 +20,6 @@ export default {
     return axios.post("/api/books", bookData);
   },
   search: function(query) {
-    return axios.get(BASEURL + query + APIKEY);
+    return axios.get(BASEURL + query);
   }
 };

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
+import ViewBtn from "../components/ViewBtn";
+import SaveBtn from "../components/SaveBtn";
 import Jumbotron from "../components/Jumbotron";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
@@ -22,7 +23,6 @@ class Books extends Component {
   searchBooks = query => {
     API.search(query)
       .then(res => {
-
         this.setState({ results: res.data.items })}, console.log(this.state.results))
       .catch(err => console.log(err));
   };
@@ -74,15 +74,19 @@ class Books extends Component {
             {this.state.results.length ? (
               <List>
                 {this.state.results.filter(book=>book.title!="Undefined").map(book => {
-debugger
-return <ListItem key={book.id}>
-<Link to={"/books/" + book.id}>
-  <strong>
-    {book.volumeInfo.title} by {book.volumeInfo.authors&&book.volumeInfo.authors.join(', ')}
-  </strong>
-</Link>
+              return <ListItem key={book.id}>
+                <strong>
+                  {book.volumeInfo.title} by {book.volumeInfo.authors&&book.volumeInfo.authors.join(', ')}
+                </strong>
+                <ViewBtn>
+                  <Link to={"/book/" + book.id}></Link>
+                </ViewBtn>
+                <SaveBtn>
+                  <Link to={"/books/" + book.id}></Link>
+                </SaveBtn>
 
-</ListItem>
+
+              </ListItem>
                 })}
               </List>
             ) : (
